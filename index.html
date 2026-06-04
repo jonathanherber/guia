@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Interativo de Segurança da Informação</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .theme-btn.active {
+            background-color: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 antialiased">
+
+    <header class="relative bg-blue-950 text-white py-14 px-4 shadow-md bg-cover bg-center overflow-hidden" style="background-image: url('image_24185e.png');">
+    <div class="absolute inset-0 bg-blue-950/80 backdrop-blur-xs"></div>
+    <div class="max-w-4xl mx-auto relative z-10 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold mb-3 drop-shadow-md">Guia Interativo: Boas Práticas de Segurança</h1>
+        <p class="text-blue-200 text-lg drop-shadow-sm">Consulte a análise detalhada, respostas ideais e referências bibliográficas.</p>
+        <br> 
+        <p class="text-blue-200 text-lg drop-shadow-sm">
+            Questionário: <a href="https://forms.gle/SNAZ9cCAGjQkYNNo6" target="_blank" class="text-blue-400 hover:text-blue-300 underline transition-colors">https://forms.gle/SNAZ9cCAGjQkYNNo6</a>
+        </p>
+    </div>
+</header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        
+        <section class="mb-10 text-center">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Selecione um Tema para Navegar:</h2>
+            <div id="themes-nav" class="flex flex-wrap justify-center gap-3">
+                </div>
+        </section>
+
+        <section id="questions-container" class="space-y-6">
+            </section>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-6 text-center text-xs mt-16 border-t border-gray-800">
+        <p>© 2026 Plataforma de Conscientização de Segurança da Informação. Alinhado com as diretrizes ISO 27001/27002 e frameworks NIST.
+        </p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // 1. BANCO DE DADOS DE PERGUNTAS E TEMAS
+        // Edite, adicione ou remova itens facilmente aqui!
+        // ==========================================
+        const database = {
+            temas: {
+                todos: { nome: "📂 Todos os Temas", emoji: "📂" },
+                senhas: { nome: "🔑 1. Senhas e Identidade", emoji: "🔑" },
+                engenharia: { nome: "🎣 2. Engenharia Social", emoji: "🎣" },
+                dispositivos: { nome: "💻 3. Dispositivos e Redes", emoji: "💻" },
+                dados: { nome: "📄 4. Proteção de Dados", emoji: "📄" },
+                cultura: { nome: "🧠 5. Cultura e Percepção", emoji: "🧠" }
+            },
+            perguntas: [
+                {
+                    id: 1,
+                    tema: "senhas",
+                    texto: "Você utiliza senhas diferentes para sistemas importantes (e-mail, banco, sistemas corporativos)?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Sempre",
+                    explicacao: "A reutilização de senhas cria um efeito cascata. Se uma plataforma secundária for invadida, os atacantes usarão ferramentas automatizadas para testar a mesma combinação no seu e-mail e sistemas corporativos.",
+                    referencia: "ISO/IEC 27002:2022 (Controle 8.5) e NIST SP 800-63B.",
+                    linkLeitura: "https://www.ntinf.ufsj.edu.br/index.php/dicas-de-seguranca-informacao/dicas-para-manter-contas-e-senhas-seguras",
+                    textoLink: "Dicas para manter contas e senhas seguras"
+                },
+                {
+                    id: 2,
+                    tema: "senhas",
+                    texto: "Você compartilha suas senhas com colegas de trabalho quando precisam acessar algo em seu nome?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Nunca",
+                    explicacao: "As credenciais de acesso são pessoais e intransferíveis. O compartilhamento quebra o princípio do 'Não-Repúdio' (responsabilização), tornando impossível auditar quem realizou determinada ação.",
+                    referencia: "ISO/IEC 27001:2022 (A.9) e LGPD Art. 46.",
+                    linkLeitura: "https://tecnopuc.pucrs.br/seguranca-da-informacao-compartilhamento-de-senhas-ainda-e-uma-pratica-comum-entre-as-pessoas/",
+                    textoLink: "Segurança da Informação: compartilhamento de senhas ainda é uma prática comum entre as pessoas"
+                },
+                {
+                    id: 3,
+                    tema: "engenharia",
+                    texto: "Antes de clicar em links recebidos por e-mail, você verifica se o remetente é confiável?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Sempre",
+                    explicacao: "O e-mail é o principal vetor para ataques de Phishing. Verificar o cabeçalho real do e-mail evita cair em técnicas de falsificação de identidade (spoofing).",
+                    referencia: "APWG Reports e ISO/IEC 27002:2022 (Controle 8.12).",
+                    linkLeitura: "https://ostec.blog/geral/analisando-e-mails-suspeitos/",
+                    textoLink: "Analisando e-mails suspeitos"
+                },
+                {
+                    id: 4,
+                    tema: "engenharia",
+                    texto: "Ao receber um e-mail solicitando informações urgentes ou confidenciais, qual seria sua primeira atitude?",
+                    opcoes: "Fornecer as informações | Clicar nos links | Confirmar por outro meio antes de agir | Encaminhar para colegas",
+                    respostaIdeal: "Confirmar a solicitação por outro meio antes de agir",
+                    explicacao: "'Senso de Urgência' é o gatilho mais explorado em ataques BEC (Business Email Compromise). Verificar por um canal secundário seguro quebra a cadeia do ataque.",
+                    referencia: "FBI Internet Crime Complaint Center (IC3) - BEC Guidance.",
+                    linkLeitura: "https://www.cisa.gov/news-events/news/avoiding-social-engineering-and-phishing-attacks",
+                    textoLink: "CISA - Evitando Ataques de Engenharia Social"
+                },
+                {
+                    id: 5,
+                    tema: "engenharia",
+                    texto: "Você já recebeu mensagens suspeitas solicitando senhas, códigos ou dados pessoais?",
+                    opcoes: "Sim | Não | Não tenho certeza",
+                    respostaIdeal: "Questão de diagnóstico clínico/estatístico.",
+                    explicacao: "Responder 'Não tenho certeza' aponta a necessidade urgente de treinamentos de identificação. Estima-se que quase 90% das pessoas ativas digitalmente já foram alvo.",
+                    referencia: "Verizon Data Breach Investigations Report (DBIR).",
+                    linkLeitura: "https://www.verizon.com/business/resources/reports/dbir/",
+                    textoLink: "2026 Data Breach Investigations Report"
+                },
+                {
+                    id: 6,
+                    tema: "senhas",
+                    texto: "Se alguém ligar dizendo ser do suporte técnico e pedir sua senha, o que você faria?",
+                    opcoes: "Informaria | Informaria parcialmente | Solicitaria confirmação | Recusaria informar",
+                    respostaIdeal: "Recusaria informar a senha",
+                    explicacao: "Suportes legítimos nunca pedem sua senha. Esse cenário descreve um ataque clássico de engenharia social por telefone (Vishing).",
+                    referencia: "Mitnick, K. 'A Arte de Enganar' e ISO/IEC 27002.",
+                    linkLeitura: "https://www.kaspersky.com.br/blog/fake-tech-support-scam/22668/",
+                    textoLink: "“Olá, somos do Suporte Técnico - Kaspersky”"
+                },
+                {
+                    id: 7,
+                    tema: "engenharia",
+                    texto: "Se uma pessoa desconhecida solicitar acesso a uma área restrita da empresa alegando estar com pressa, você:",
+                    opcoes: "Permitiria | Permitiria após identificação | Encaminharia para a recepção | Não sei",
+                    respostaIdeal: "Encaminharia para a recepção ou responsável",
+                    explicacao: "Isso evita a técnica de 'Tailgating' (carona física), onde o invasor explora a cortesia social para passar por portas eletrônicas sem autenticação.",
+                    referencia: "ISO/IEC 27002:2022 (Controle 7.4 - Segurança Física).",
+                    linkLeitura: "https://www.manageengine.com/br/blog/general/como-funciona-um-ataque-de-tailgating.html",
+                    textoLink: "Como funciona um ataque de tailgating?"
+                },
+                {
+                    id: 8,
+                    tema: "dispositivos",
+                    texto: "Quando se afasta do computador, você bloqueia a tela?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Sempre",
+                    explicacao: "Uma sessão ativa exposta permite que qualquer pessoa interna ou visitante mal-intencionado extraia dados ou instale malwares em segundos (ataques 'Evil Maid'). Use Win+L.",
+                    referencia: "ISO/IEC 27002:2022 (Controle 7.7 - Política de mesa e tela limpa).",
+                    linkLeitura: "https://www.tecmundo.com.br/produto/11688-como-bloquear-a-tela-de-login-do-computador-afastando-se-dele-video-.htm",
+                    textoLink: "Como bloquear a tela de login do computador afastando-se dele"
+                },
+                {
+                    id: 9,
+                    tema: "dispositivos",
+                    texto: "Você utiliza o computador corporativo para instalar programas sem autorização?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Nunca",
+                    explicacao: "Softwares não autorizados (Shadow IT) podem conter vulnerabilidades críticas ou malwares ocultos, além de violar regras de conformidade da empresa.",
+                    referencia: "CIS Controls v8 (Controle 2: Inventário e Controle de Softwares).",
+                    linkLeitura: "https://tivit.com/seguranca-da-informacao-em-tempos-de-home-office/",
+                    textoLink: "Segurança da Informação em tempos de Home Office"
+                },
+                {
+                    id: 10,
+                    tema: "dispositivos",
+                    texto: "Você costuma conectar dispositivos pessoais (pendrives, HDs externos) ao computador da empresa?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Nunca",
+                    explicacao: "Mídias removíveis são vetores massivos de infecção cruzada de malwares domésticos para a rede corporativa, além do risco de vazamento de informações.",
+                    referencia: "ISO/IEC 27002:2022 (Controle 8.14).",
+                    linkLeitura: "https://www.crowdstrike.com/pt-br/cybersecurity-101/threat-intelligence/attack-vector/",
+                    textoLink: "Vetores de ataque: o que são e como são explorados"
+                },
+                {
+                    id: 11,
+                    tema: "dispositivos",
+                    texto: "Antes de baixar arquivos da internet, você verifica se a fonte é confiável?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Sempre",
+                    explicacao: "Downloads maliciosos (Drive-by downloads) mimetizam utilitários legítimos. Garantir fontes HTTPS verificadas mitiga riscos sistêmicos.",
+                    referencia: "OWASP Top 10 A06:2021 - Configurações Inseguras.",
+                    linkLeitura: "https://www.techtudo.com.br/listas/2025/05/voce-deve-fazer-isso-antes-de-abrir-qualquer-arquivo-baixado-na-internet-edsoftwares.ghtml",
+                    textoLink: "Você deve fazer isso antes de abrir qualquer arquivo baixado na Internet"
+                },
+                {
+                    id: 12,
+                    tema: "dispositivos",
+                    texto: "Você utiliza redes Wi-Fi públicas para acessar informações de trabalho?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Raramente ou Nunca (Apenas se protegido por VPN)",
+                    explicacao: "Redes Wi-Fi públicas permitem ataques de interceptação Man-in-the-Middle (MitM), onde criminosos capturam pacotes de dados e credenciais expostas.",
+                    referencia: "NIST SP 800-46 Rev. 2 (Telework and BYOD Security).",
+                    linkLeitura: "https://www.checkpoint.com/pt/cyber-hub/cyber-security/what-is-a-man-in-the-middle-mitm-attack/",
+                    textoLink: "O que é um ataque do tipo Homem no Meio (MitM)?"
+                },
+                {
+                    id: 13,
+                    tema: "dados",
+                    texto: "Você verifica os destinatários antes de enviar informações sensíveis por e-mail?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Sempre",
+                    explicacao: "O recurso de auto-completar do e-mail gera rotineiramente incidentes críticos de quebra de sigilo por erros operacionais (envio para homônimos externos).",
+                    referencia: "LGPD (Lei nº 13.709/2018) e ISO 27002 (Controle 8.11).",
+                    linkLeitura: "https://www.checkpoint.com/pt/cyber-hub/threat-prevention/what-is-email-security/email-security-best-practices/",
+                    textoLink: "10 práticas recomendadas de segurança de e-mail a seguir"
+                },
+                {
+                    id: 14,
+                    tema: "dados",
+                    texto: "Caso encontre documentos confidenciais impressos em áreas comuns, você:",
+                    opcoes: "Leva para casa | Ignora | Lê para achar o dono | Entrega ao responsável ou comunica o setor",
+                    respostaIdeal: "Entrega os documentos ao responsável ou comunica a situação ao setor apropriado",
+                    explicacao: "Tratar mídias físicas com sigilo é parte crucial da segurança. Abandoná-las prolonga o tempo de exposição e a severidade do risco.",
+                    referencia: "ISO/IEC 27002:2022 (Controle 7.10 - Descarte e guarda de mídias).",
+                    linkLeitura: "https://www.metrofile.com.br/blog/documentos-confidenciais/",
+                    textoLink: "Boas práticas de segurança para documentos confidenciais"
+                },
+                {
+                    id: 15,
+                    tema: "dados",
+                    texto: "Você compartilha informações corporativas em aplicativos pessoais de mensagens?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Nunca",
+                    explicacao: "Aplicativos pessoais de chat não são homologados pela TI e quebram a cadeia de custódia, governança e conformidade de dados da empresa.",
+                    referencia: "COBIT 2019 (Framework de Governança de TI).",
+                    linkLeitura: "https://riosaude.prefeitura.rio/wp-content/uploads/sites/66/2024/01/cartilha-boas-praticas-uso-app-mensagens-riosaude.pdf",
+                    textoLink: "Uso seguro de aplicativo de mensagens"
+                },
+                {
+                    id: 16,
+                    tema: "dados",
+                    texto: "Quando trabalha fora da empresa, evita que outras pessoas visualizem informações na tela?",
+                    opcoes: "Sempre | Frequentemente | Às vezes | Raramente | Nunca",
+                    respostaIdeal: "Sempre",
+                    explicacao: "A visualização não autorizada de telas por terceiros é chamada de 'Shoulder Surfing'. Recomenda-se o uso de películas de privacidade ópticas.",
+                    referencia: "ISO/IEC 27002 (Controle 7.7).",
+                    linkLeitura: "https://www.keepersecurity.com/blog/pt-br/2023/07/26/what-is-shoulder-surfing/",
+                    textoLink: "O que é Shoulder Surfing?"
+                },
+                {
+                    id: 17,
+                    tema: "senhas",
+                    texto: "Seu computador ou celular utilizado para trabalho possui senha ou bloqueio de acesso?",
+                    opcoes: "Sim | Não",
+                    respostaIdeal: "Sim",
+                    explicacao: "A falta de senhas ou biometria local concede acesso irrestrito imediato a sistemas internos em casos de roubo, perda ou furto do ativo.",
+                    referencia: "NIST SP 800-114 (User's Guide to Telework Security).",
+                    linkLeitura: "https://www.gov.br/lncc/pt-br/centrais-de-conteudo/campanhas-de-conscientizacao/gestao-de-seguranca-da-informacao/2025/uso-consciente-de-dispositivos-moveis-no-ambiente-de-trabalho-e-remotamente",
+                    textoLink: "Guia de Segurança para Dispositivos - Gov BR"
+                },
+                {
+                    id: 18,
+                    tema: "cultura",
+                    texto: "Se perceber algo suspeito (e-mail estranho, sistema diferente, arquivo desconhecido), você reportaria para a empresa?",
+                    opcoes: "Imediatamente | Apenas se afetar meu trabalho | Apenas se pedirem | Não sei para quem",
+                    respostaIdeal: "Imediatamente",
+                    explicacao: "O tempo é vital na resposta a incidentes. Alertas precoces evitam movimentos laterais de infecções graves como Ransomware na rede corporativa.",
+                    referencia: "NIST SP 800-61 Rev. 2 (Incident Handling Guide).",
+                    linkLeitura: "https://csrc-nist-gov.translate.goog/pubs/sp/800/61/r2/final?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=pt&_x_tr_pto=tc",
+                    textoLink: "Guia de Tratamento de Incidentes de Segurança Cibernética"
+                },
+                {
+                    id: 19,
+                    tema: "cultura",
+                    texto: "Você sabe como entrar em contato com a equipe responsável por segurança ou suporte em caso de incidente?",
+                    opcoes: "Sim | Não",
+                    respostaIdeal: "Sim",
+                    explicacao: "Conhecer com precisão os canais de acionamento do time de segurança reduz o tempo de contenção de falhas e vazamentos.",
+                    referencia: "ISO/IEC 27001:2022 (A.16 - Gerenciamento de Incidentes).",
+                    linkLeitura: "https://csrc-nist-gov.translate.goog/pubs/sp/800/61/r2/final?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=pt&_x_tr_pto=tc",
+                    textoLink: "Guia de Tratamento de Incidentes de Segurança Cibernética"
+                },
+                {
+                    id: 20,
+                    tema: "dispositivos",
+                    texto: "Você sabe o que é VPN?",
+                    opcoes: "Sim | Não",
+                    respostaIdeal: "Sim",
+                    explicacao: "VPN (Virtual Private Network) estabelece um canal tunelado e criptografado para tráfego seguro de dados em conexões fora do perímetro físico corporativo.",
+                    referencia: "NIST SP 800-77 Rev. 1 (Guide to IPsec VPNs).",
+                    linkLeitura: "https://www.lncc.br/~borges/doc/VPN%20Protocolos%20e%20Seguranca.pdf",
+                    textoLink: "VPN: Protocolos e Segurança"
+                },
+                {
+                    id: 21,
+                    tema: "dispositivos",
+                    texto: "Você utiliza soluções de segurança como Anti-Vírus em seus dispositivos pessoais?",
+                    opcoes: "Sim | Não",
+                    respostaIdeal: "Sim",
+                    explicacao: "Máquinas domésticas desprotegidas e conectadas aos ambientes corporativos viram pontes de infecção ideais para atacantes.",
+                    referencia: "CIS Controls v8 (Controle 10: Defesas contra Malware).",
+                    linkLeitura: "https://www.checkpoint.com/pt/cyber-hub/threat-prevention/what-is-malware/how-to-prevent-malware-8-effective-tips/",
+                    textoLink: "Como prevenir Malware: 8 dicas importantes"
+                },
+                {
+                    id: 22,
+                    tema: "engenharia",
+                    texto: "Você já caiu em algum golpe digital através de redes sociais e/ou e-mail?",
+                    opcoes: "Sim | Não",
+                    respostaIdeal: "Questão analítica/diagnóstica.",
+                    explicacao: "Mapear o histórico de incidentes serve para desmistificar o erro humano e direcionar simulações internas controladas de phishing.",
+                    referencia: "NIST SP 800-50 (Building a Security Awareness Program).",
+                    linkLeitura: "https://admin.pc.rs.gov.br/upload/arquivos/202304/04121500-cartilha-golpes-na-internet-atualizada-compressed.pdf",
+                    textoLink: "Cuidado com golpes na internet"
+                },
+                {
+                    id: 23,
+                    tema: "senhas",
+                    texto: "Você utiliza algum software de armazenamento de senhas/cofre de senhas?",
+                    opcoes: "Sim | Não",
+                    respostaIdeal: "Sim",
+                    explicacao: "Cofres digitais geram e armazenam chaves complexas e exclusivas automaticamente, mitigando a falha biológica do esquecimento humano.",
+                    referencia: "NIST SP 800-63B Section 5.1.1.2.",
+                    linkLeitura: "https://www.keepersecurity.com/blog/pt-br/2024/07/11/what-is-a-password-manager-2/",
+                    textoLink: "O que é um gerenciador de senhas?"
+                },
+                {
+                    id: 24,
+                    tema: "cultura",
+                    texto: "Como você avalia seu conhecimento sobre boas práticas de segurança da informação?",
+                    opcoes: "Muito baixo | Baixo | Médio | Alto | Muito Alto",
+                    respostaIdeal: "Métrica de autoavaliação subjetiva.",
+                    explicacao: "Útil para balancear o excesso de confiança e aplicar métricas comportamentais baseadas no efeito Dunning-Kruger.",
+                    referencia: "SANS Security Awareness Maturity Model.",
+                    linkLeitura: "https://www.sans.org/white-papers/security-awareness-maturity-model",
+                    textoLink: "SANS Security Awareness Maturity Model"
+                },
+                {
+                    id: 25,
+                    tema: "cultura",
+                    texto: "Após responder ao questionário, você passou a reconsiderar algum comportamento ou hábito relacionado à sua segurança digital?",
+                    opcoes: "Resposta de impacto / Feedback cognitivo",
+                    respostaIdeal: "Sim (Esperado)",
+                    explicacao: "O objetivo final do aprendizado em cybersecurity não é memorização teórica, mas a mudança efetiva da postura e dos hábitos cotidianos do usuário.",
+                    referencia: "ISO/IEC 27002:2022 Controle 6.3 (Treinamento e Conscientização).",
+                    linkLeitura: "https://blog.grancursosonline.com.br/diretrizes-para-controles-de-seguranca-da-informacao/",
+                    textoLink: "Diretrizes para Controles de Segurança da Informação"
+                }
+            ]
+        };
+
+        // ==========================================
+        // 2. RENDERIZADORES DINÂMICOS (DOM)
+        // ==========================================
+        
+        // Renderiza os botões de controle de tema
+        function renderThemeButtons() {
+            const container = document.getElementById('themes-nav');
+            container.innerHTML = ''; // Limpa o container
+
+            Object.keys(database.temas).forEach((key, index) => {
+                const temaInfo = database.temas[key];
+                const button = document.createElement('button');
+                
+                button.id = `btn-${key}`;
+                button.textContent = temaInfo.nome;
+                button.className = `theme-btn px-4 py-2 rounded-lg border border-gray-300 font-medium text-sm transition-all hover:bg-gray-100 cursor-pointer ${index === 0 ? 'active' : 'bg-white'}`;
+                
+                // Evento de clique aciona o filtro
+                button.onclick = () => filterTheme(key);
+                container.appendChild(button);
+            });
+        }
+
+        // Renderiza a lista de perguntas mapeada do Array
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = ''; // Limpa o container
+
+            database.perguntas.forEach(q => {
+                // Seleciona a cor da tag baseada no tema
+                const badgeColor = getBadgeColor(q.tema);
+                const temaNome = database.temas[q.tema].nome;
+
+                // Monta o bloco opcional de links se existirem
+                const linkHTML = q.linkLeitura 
+                    ? `<br><strong>🔗 Leitura Recomendada:</strong> <a href="${q.linkLeitura}" target="_blank" class="text-blue-600 underline hover:text-blue-800">${q.textoLink}</a>` 
+                    : '';
+
+                const cardHTML = `
+                    <div class="question-card bg-white p-6 rounded-xl shadow-xs border border-gray-200" data-theme="${q.tema}">
+                        <span class="${badgeColor} text-xs font-semibold px-2.5 py-1 rounded-full">${temaNome}</span>
+                        <h3 class="text-lg font-bold mt-2 text-gray-950">Pergunta ${q.id}: ${q.texto}</h3>
+                        <div class="mt-2 text-gray-600 text-sm"><strong>Opções:</strong> ${q.opcoes}</div>
+                        
+                        <button onclick="toggleDetails('ans-${q.id}')" class="mt-4 text-blue-600 hover:text-blue-800 text-sm font-semibold flex items-center gap-1 cursor-pointer">
+                            Ver Resposta Correta & Referências ↓
+                        </button>
+                        
+                        <div id="ans-${q.id}" class="hidden mt-4 pt-4 border-t border-gray-100 bg-gray-50 p-4 rounded-lg">
+                            <p class="mb-2"><strong>👉 Resposta Correta/Ideal:</strong> <span class="text-green-700 font-semibold">${q.respostaIdeal}</span></p>
+                            <p class="text-sm text-gray-700 mb-3"><strong>Explicação:</strong> ${q.explicacao}</p>
+                            <div class="text-xs text-gray-600 bg-white p-3 rounded border border-gray-200">
+                                <strong>📚 Referência Bibliográfica:</strong> ${q.referencia}
+                                ${linkHTML}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        // Retorna a cor estética para cada classe de tema
+        function getBadgeColor(tema) {
+            const colors = {
+                senhas: "bg-blue-100 text-blue-800",
+                engenharia: "bg-amber-100 text-amber-800",
+                dispositivos: "bg-purple-100 text-purple-800",
+                dados: "bg-teal-100 text-teal-800",
+                cultura: "bg-rose-100 text-rose-800"
+            };
+            return colors[tema] || "bg-gray-100 text-gray-800";
+        }
+
+        // ==========================================
+        // 3. FUNÇÕES INTERATIVAS DE TELA
+        // ==========================================
+
+        // Alterna a visibilidade das explicações
+        function toggleDetails(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+
+        // Filtra a exibição dos cards
+        function filterTheme(themeKey) {
+            // Atualiza o estado visual dos botões
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-900', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-800');
+            });
+            
+            const selectedBtn = document.getElementById(`btn-${themeKey}`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('active');
+            }
+            
+            // Oculta/Exibe os cards das perguntas no DOM
+            const cards = document.querySelectorAll('.question-card');
+            cards.forEach(card => {
+                if (themeKey === 'todos' || card.getAttribute('data-theme') === themeKey) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Inicializa o sistema ao carregar a página
+        window.onload = () => {
+            renderThemeButtons();
+            renderQuestions();
+        };
+    </script>
+</body>
+</html>
