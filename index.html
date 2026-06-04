@@ -45,10 +45,6 @@
     </footer>
 
     <script>
-        // ==========================================
-        // 1. BANCO DE DADOS DE PERGUNTAS E TEMAS
-        // Edite, adicione ou remova itens facilmente aqui!
-        // ==========================================
         const database = {
             temas: {
                 todos: { nome: "📂 Todos os Temas", emoji: "📂" },
@@ -337,14 +333,9 @@
             ]
         };
 
-        // ==========================================
-        // 2. RENDERIZADORES DINÂMICOS (DOM)
-        // ==========================================
-        
-        // Renderiza os botões de controle de tema
         function renderThemeButtons() {
             const container = document.getElementById('themes-nav');
-            container.innerHTML = ''; // Limpa o container
+            container.innerHTML = ''; 
 
             Object.keys(database.temas).forEach((key, index) => {
                 const temaInfo = database.temas[key];
@@ -354,23 +345,21 @@
                 button.textContent = temaInfo.nome;
                 button.className = `theme-btn px-4 py-2 rounded-lg border border-gray-300 font-medium text-sm transition-all hover:bg-gray-100 cursor-pointer ${index === 0 ? 'active' : 'bg-white'}`;
                 
-                // Evento de clique aciona o filtro
                 button.onclick = () => filterTheme(key);
                 container.appendChild(button);
             });
         }
 
-        // Renderiza a lista de perguntas mapeada do Array
         function renderQuestions() {
             const container = document.getElementById('questions-container');
-            container.innerHTML = ''; // Limpa o container
+            container.innerHTML = ''; 
 
             database.perguntas.forEach(q => {
-                // Seleciona a cor da tag baseada no tema
+                
                 const badgeColor = getBadgeColor(q.tema);
                 const temaNome = database.temas[q.tema].nome;
 
-                // Monta o bloco opcional de links se existirem
+                
                 const linkHTML = q.linkLeitura 
                     ? `<br><strong>🔗 Leitura Recomendada:</strong> <a href="${q.linkLeitura}" target="_blank" class="text-blue-600 underline hover:text-blue-800">${q.textoLink}</a>` 
                     : '';
@@ -399,7 +388,7 @@
             });
         }
 
-        // Retorna a cor estética para cada classe de tema
+        
         function getBadgeColor(tema) {
             const colors = {
                 senhas: "bg-blue-100 text-blue-800",
@@ -411,19 +400,14 @@
             return colors[tema] || "bg-gray-100 text-gray-800";
         }
 
-        // ==========================================
-        // 3. FUNÇÕES INTERATIVAS DE TELA
-        // ==========================================
-
-        // Alterna a visibilidade das explicações
         function toggleDetails(id) {
             const el = document.getElementById(id);
             el.classList.toggle('hidden');
         }
 
-        // Filtra a exibição dos cards
+        
         function filterTheme(themeKey) {
-            // Atualiza o estado visual dos botões
+            
             document.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-blue-900', 'text-white');
                 btn.classList.add('bg-white', 'text-gray-800');
@@ -434,7 +418,7 @@
                 selectedBtn.classList.add('active');
             }
             
-            // Oculta/Exibe os cards das perguntas no DOM
+            
             const cards = document.querySelectorAll('.question-card');
             cards.forEach(card => {
                 if (themeKey === 'todos' || card.getAttribute('data-theme') === themeKey) {
@@ -445,7 +429,6 @@
             });
         }
 
-        // Inicializa o sistema ao carregar a página
         window.onload = () => {
             renderThemeButtons();
             renderQuestions();
