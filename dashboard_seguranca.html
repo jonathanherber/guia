@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Boas Práticas de Segurança</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background:#f5f7fa;
+}
+h1 { text-align:center; }
+.stats {
+    display:flex;
+    gap:20px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+.card {
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,.1);
+    min-width:180px;
+}
+.chart-container {
+    background:white;
+    margin:20px 0;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+canvas {
+    max-height:400px;
+}
+</style>
+</head>
+<body>
+
+<h1>Dashboard - Assessment de Segurança</h1>
+
+<div class="stats">
+  <div class="card"><h2>8</h2><div>Respostas</div></div>
+  <div class="card"><h2>25</h2><div>Perguntas</div></div>
+</div>
+
+<div id="charts"></div>
+
+<script>
+const data = {"1 - Você utiliza senhas diferentes para sistemas  importantes (e-mail, banco, sistemas corporativos)?": {"Sempre": 3, "Frequentemente": 3, "Raramente": 1, "Nunca": 1}, "2 - Você compartilha suas senhas com colegas de trabalho quando precisam acessar algo em seu nome?": {"Nunca": 3, "Raramente": 2, "Frequentemente": 2, "Sempre": 1}, "3 - Antes de clicar em links recebidos por e-mail, você verifica se o remetente é confiável?": {"Frequentemente": 3, "Sempre": 3, "Às vezes": 1, "Nunca": 1}, "4 - Ao receber um e-mail solicitando informações urgentes ou confidenciais, qual seria sua primeira atitude?": {"Confirmar a solicitação por outro meio antes de agir": 6, "Fornecer as informações solicitadas": 1, "Clicar nos links do e-mail": 1}, "5 - Você já recebeu mensagens suspeitas solicitando senhas, códigos ou dados pessoais?": {"Sim": 7, "Não": 1}, "6 - Se alguém ligar dizendo ser do suporte técnico e pedir sua senha, o que você faria?": {"Recusaria informar a senha": 4, "Solicitaria confirmação da identidade antes": 3, "Informaria parcialmente": 1}, "7 - Se uma pessoa desconhecida solicitar acesso a uma área restrita da empresa alegando estar com pressa, você:": {"Encaminharia para a recepção ou responsável": 6, "Permitiria a entrada": 1, "Permitiria após verificar identificação": 1}, "8 - Quando se afasta do computador, você bloqueia a tela?": {"Sempre": 3, "Frequentemente": 2, "Raramente": 2, "Às vezes": 1}, "9 - Você utiliza o computador corporativo para instalar programas sem autorização?": {"Às vezes": 3, "Nunca": 3, "Frequentemente": 1, "Sempre": 1}, "10 - Você costuma conectar dispositivos pessoais (pendrives, HDs externos) ao computador da empresa?": {"Às vezes": 2, "Nunca": 2, "Raramente": 2, "Frequentemente": 1, "Sempre": 1}, "11 - Antes de baixar arquivos da internet, você verifica se a fonte é confiável?": {"Sempre": 3, "Frequentemente": 2, "Às vezes": 1, "Nunca": 1, "Raramente": 1}, "12 - Você utiliza redes Wi-Fi públicas para acessar informações de trabalho?": {"Nunca": 4, "Raramente": 3, "Frequentemente": 1}, "13 - Você verifica os destinatários antes de enviar informações sensíveis por e-mail?": {"Sempre": 4, "Às vezes": 2, "Frequentemente": 1, "Raramente": 1}, "14 - Caso encontre documentos confidenciais impressos em áreas comuns, você:": {"Entrega os documentos ao responsável ou comunica a situação ao setor apropriado.": 6, "Ignora a situação, pois não é sua responsabilidade.": 2}, "15 - Você compartilha informações corporativas em aplicativos pessoais de mensagens?": {"Raramente": 3, "Sempre": 3, "Nunca": 1, "Às vezes": 1}, "16 - Quando trabalha fora da empresa, evita que outras pessoas visualizem informações na tela?": {"Frequentemente": 4, "Sempre": 2, "Às vezes": 2}, "17 - Seu computador ou celular utilizado para trabalho possui senha ou bloqueio de acesso?": {"Sim": 6, "Não": 2}, "18 - Se perceber algo suspeito (e-mail estranho, sistema diferente, arquivo desconhecido), você reportaria para a empresa?": {"Apenas se afetar meu trabalho": 2, "Imediatamente": 2, "Não sei para quem reportar": 2, "Apenas se alguém pedir": 2}, "19 - Você sabe como entrar em contato com a equipe responsável por segurança ou suporte em caso de incidente?": {"Sim": 5, "Não": 3}, "20 - Você sabe o que é VPN?": {"Sim": 5, "Não": 3}, "21 - Você utiliza soluções de segurança como Anti-Vírus em seus dispositivos pessoais?": {"Não": 4, "Sim": 4}, "22 - Você já caiu em algum golpe digital através de redes sociais e/ou e-mail?": {"Sim": 5, "Não": 3}, "23 - Você utiliza algum software de armazenamento de senhas/cofre de senhas?": {"Não": 6, "Sim": 2}, "24 - Como você avalia seu conhecimento sobre boas práticas de segurança da informação?": {"Médio": 4, "Baixo": 3, "Muito Alto": 1}, "25 - Após responder ao questionário, você passou a reconsiderar algum comportamento ou hábito relacionado à sua segurança digital?": {"Sim": 7, "Não": 1}};
+const chartsDiv = document.getElementById("charts");
+
+Object.entries(data).forEach(([question, answers], index) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "chart-container";
+
+    const title = document.createElement("h3");
+    title.textContent = question;
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "chart" + index;
+
+    wrapper.appendChild(title);
+    wrapper.appendChild(canvas);
+    chartsDiv.appendChild(wrapper);
+
+    new Chart(canvas, {
+        type: "bar",
+        data: {
+            labels: Object.keys(answers),
+            datasets: [{
+                label: "Quantidade de respostas",
+                data: Object.values(answers)
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>
